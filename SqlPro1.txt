@@ -1,0 +1,108 @@
+create Database Exam1;
+use Exam1;
+create table Customer (
+		CustomerID int primary key,
+        Name varchar(50),
+        Email varchar(50),
+        Address varchar(50)
+        );
+-- Q -1
+insert into Customer(CustomerID,Name,Email,Address) values 
+(1,'Subash','subash@gmail.com','34, B ,godadara ,Surat'),
+(2,'parth','parthh@gmail.com','shive park ,C-45'),
+(3,'Dipak','dipak@gmail.com','laxmi park'),
+(4,'Bunty','bunty@gmail.com',' pramukh aryana'),
+(5,'Vandan','vandan@gmail.com','keshav nagar ');
+-- Q2
+select * from Customer;
+-- Q3
+update Customer set Address='narayan nagar' where CustomerID=1;
+-- Q4
+delete from Customer where CustomerID=1;
+-- Q5
+select * from Customer where Name='Dipak';
+
+
+
+
+create table Orders(
+	OrderID int primary key,
+    CustomerID int,
+    OrderDate date,
+    TotalAmount int,
+    foreign Key(CustomerID) references Customer(CustomerID)
+    );
+-- Q1
+insert into Orders (OrderID, CustomerID, OrderDate, TotalAmount) values
+(101, 2, '2026-01-10', 1500),
+(102, 3, '2026-01-12', 2200),
+(103, 4, '2026-01-15', 1800),
+(104, 5, '2026-01-18', 2500),
+(105, 2, '2026-01-20', 3000);
+-- Q2
+select * from Orders;
+-- Q3
+select * from Orders where CustomerID=2;
+-- Q4
+update Orders set TotalAmount=1550 where CustomerID=1;
+-- Q5
+delete from Orders where OrderID=102;
+-- Q6
+SELECT *
+FROM Orders
+WHERE OrderDate >= CURDATE() - INTERVAL 30 DAY;
+SELECT 
+    MAX(TotalAmount) AS HighestAmount,
+    MIN(TotalAmount) AS LowestAmount,
+    AVG(TotalAmount) AS AverageAmount
+FROM Orders;
+
+
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(50),
+    Price INT,
+    Stock INT
+);
+INSERT INTO Products (ProductID, ProductName, Price, Stock) VALUES
+(1, 'Mobile', 15000, 10),
+(2, 'Laptop', 55000, 5),
+(3, 'Headphones', 1200, 0),
+(4, 'Keyboard', 800, 15),
+(5, 'Mouse', 500, 20);
+
+select * from Products;
+
+Select * from Products ORDER BY Price DESC;
+Update Products Set Price = 14000 Where ProductID = 1;
+Delete from Products Where Stock = 0;
+Select *  From Products Where Price between 500 AND 2000;
+SELECT 
+    MAX(Price) AS MaxPrice,
+    MIN(Price) AS MinPrice
+FROM Products;
+
+
+CREATE TABLE OrderDetails (
+    OrderDetailID INT PRIMARY KEY,
+    OrderID INT,
+    ProductID INT,
+    Quantity INT,
+    SubTotal INT,
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+INSERT INTO OrderDetails (OrderDetailID, OrderID, ProductID, Quantity, SubTotal) VALUES
+(1, 101, 1, 1, 15000),
+(2, 101, 4, 2, 1600),
+(3, 103, 5, 2, 1000),
+(4, 104, 2, 1, 55000),
+(5, 105, 1, 1, 15000);
+
+select * from OrderDetails;
+SELECT ProductID, SUM(Quantity) AS TotalQuantity FROM OrderDetails GROUP BY ProductID ORDER BY TotalQuantity DESC LIMIT 3;
+SELECT COUNT(*) AS Sold FROM OrderDetails WHERE ProductID = 1;
+
+
+
